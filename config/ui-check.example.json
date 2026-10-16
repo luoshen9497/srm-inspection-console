@@ -1,0 +1,115 @@
+{
+  "ui": {
+    "browser": "chromium",
+    "headless": true,
+    "default_timeout_seconds": 15,
+    "locale": "zh-CN",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "ignore_https_errors": false,
+    "trace_on_failure": false,
+    "screenshot_masks": [
+      {
+        "test_id": "current-user"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "ui-login",
+      "type": "ui",
+      "name": "UI 登录",
+      "category": "访问与会话",
+      "enabled": false,
+      "login_precheck": true,
+      "severity": "P1",
+      "alert_enabled": true,
+      "steps": [
+        {
+          "id": "open-login",
+          "description": "打开登录页面",
+          "action": "goto",
+          "path": "/login"
+        },
+        {
+          "id": "fill-username",
+          "description": "填写巡检账号",
+          "action": "fill",
+          "locator": {
+            "label": "用户名"
+          },
+          "value": "${SRM_USERNAME}",
+          "sensitive": true
+        },
+        {
+          "id": "fill-password",
+          "description": "填写巡检密码",
+          "action": "fill",
+          "locator": {
+            "label": "密码"
+          },
+          "value": "${SRM_PASSWORD}",
+          "sensitive": true
+        },
+        {
+          "id": "submit-login",
+          "description": "提交登录并等待工作台",
+          "action": "click",
+          "locator": {
+            "role": "button",
+            "name": "登录"
+          }
+        },
+        {
+          "id": "verify-login",
+          "description": "确认已离开登录页",
+          "action": "assert_url",
+          "authentication_assertion": true,
+          "expected": "/login",
+          "match": "not_contains"
+        }
+      ]
+    },
+    {
+      "id": "ui-purchase-request-list",
+      "type": "ui",
+      "name": "采购申请列表页面",
+      "category": "采购申请",
+      "enabled": false,
+      "severity": "P2",
+      "alert_enabled": true,
+      "steps": [
+        {
+          "id": "open-purchase-request",
+          "description": "进入采购申请列表",
+          "action": "click",
+          "locator": {
+            "role": "link",
+            "name": "采购申请"
+          }
+        },
+        {
+          "id": "verify-table",
+          "description": "确认采购申请列表加载成功",
+          "action": "assert_visible",
+          "locator": {
+            "test_id": "purchase-request-table"
+          }
+        },
+        {
+          "id": "verify-code-column",
+          "description": "确认列表包含申请单号列",
+          "action": "assert_text",
+          "locator": {
+            "role": "columnheader",
+            "name": "申请单号"
+          },
+          "expected": "申请单号",
+          "match": "equals"
+        }
+      ]
+    }
+  ]
+}

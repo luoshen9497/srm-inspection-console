@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SRM 多系统巡检中心</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('srm-theme')||'light';document.documentElement.dataset.sidebar=localStorage.getItem('srm-sidebar')||'expanded'}catch{document.documentElement.dataset.theme='light';document.documentElement.dataset.sidebar='expanded'}if(location.protocol==='file:')document.documentElement.classList.add('file-mode')</script>
+  <link rel="stylesheet" href="./style.css?v=20261014-health-radar-1">
+</head>
+<body>
+  <button id="mobile-backdrop" class="mobile-backdrop hidden" type="button" aria-label="关闭导航"></button>
+  <aside id="sidebar" class="sidebar" aria-label="侧边栏">
+    <div class="sidebar-header">
+      <div class="brand-home" aria-label="SRM 巡检中心">
+        <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 7 8-4 8 4-8 4-8-4Z"/><path d="m4 12 8 4 8-4M4 17l8 4 8-4"/></svg></span>
+        <span class="brand-copy"><small>巡检工作区</small><strong>SRM 巡检中心</strong></span>
+      </div>
+      <button id="sidebar-toggle" class="sidebar-collapse" type="button" aria-label="折叠侧边栏" title="折叠侧边栏"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+    </div>
+    <span id="brand-name" class="sr-only">SRM 巡检中心</span>
+    <div class="sidebar-navigation">
+    <div class="side-label">监控中心</div>
+    <nav aria-label="主导航">
+      <button class="nav active" data-view="overview" aria-current="page" title="运行总览"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>运行总览</span></button>
+      <div class="check-nav-group is-collapsed">
+        <button class="nav check-nav-parent" data-view="checks" title="巡检项" aria-expanded="false" aria-controls="check-nav-children"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></svg><span>巡检项</span><svg class="check-nav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div id="check-nav-children" class="check-nav-children" aria-label="巡检项类型">
+          <button class="check-nav-child active" type="button" data-check-kind="api"><span class="check-kind-dot api" aria-hidden="true"></span>API 巡检项</button>
+          <button class="check-nav-child" type="button" data-check-kind="ui"><span class="check-kind-dot ui" aria-hidden="true"></span>UI 场景项</button>
+        </div>
+      </div>
+      <div class="report-nav-group is-collapsed">
+        <button class="nav report-nav-parent" data-view="reports" title="报告中心" aria-expanded="false" aria-controls="report-nav-children"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg><span>报告中心</span><svg class="report-nav-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div id="report-nav-children" class="report-nav-children" aria-label="报告类型">
+          <button class="report-nav-child active" type="button" data-report-kind="api"><span class="report-kind-dot api" aria-hidden="true"></span>API 巡检报告</button>
+          <button class="report-nav-child" type="button" data-report-kind="ui"><span class="report-kind-dot ui" aria-hidden="true"></span>UI 场景报告</button>
+        </div>
+      </div>
+      <button class="nav" data-view="incidents" title="告警中心"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span>告警中心</span><span id="nav-alert-count" class="nav-badge hidden">0</span></button>
+    </nav>
+    <div class="side-label management-label">巡检配置</div>
+    <nav aria-label="巡检配置">
+      <button class="nav" data-view="api-checks" title="API 巡检"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9 4 12l4 3M16 9l4 3-4 3M14 5l-4 14"/></svg><span>API 巡检</span></button>
+      <button class="nav" data-view="ui-scenes" title="UI 场景"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h4M7 13h8"/></svg><span>UI 场景</span></button>
+    </nav>
+    <div class="side-label management-label">系统管理</div>
+    <nav aria-label="系统管理"><button class="nav" data-view="settings" title="系统设置"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.09A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3V9.6h.09A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06-.06A1.7 1.7 0 0 0 19.4 9c.12.38.34.72.6 1 .3.27.68.4 1.1.4h.09v4h-.09c-.42 0-.8.14-1.1.4-.27.28-.49.62-.6 1Z"/></svg><span>系统设置</span></button></nav>
+    <div class="side-label management-label">支持与指南</div>
+    <nav aria-label="支持与指南"><button class="nav" data-view="help" title="帮助中心"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1ZM12 5v15M6 8h3M6 12h3M15 8h3M15 12h3"/></svg><span>帮助中心</span></button></nav>
+    </div>
+    <div class="sidebar-bottom"><span class="console-mark" aria-hidden="true">SRM</span><div><b>自动化巡检</b><small><span class="pulse" aria-hidden="true"></span>本地服务运行正常</small></div></div>
+  </aside>
+
+  <main class="app-main">
+    <header class="topbar">
+      <div class="topbar-start">
+        <button id="mobile-menu" class="icon-button mobile-menu" type="button" aria-label="打开导航"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div class="context-switcher topbar-context-switcher">
+          <select id="system-select" class="sr-only" tabindex="-1" aria-label="选择巡检系统"></select>
+          <button id="system-switcher-trigger" class="system-context-button" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <span class="context-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"/><path d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5"/></svg></span>
+            <span class="context-copy"><small>当前系统</small><strong id="system-switcher-name">系统载入中</strong></span>
+            <span id="environment" class="env">环境载入中</span>
+            <svg class="context-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+          </button>
+          <div id="system-switcher-menu" class="system-menu hidden" role="listbox" aria-label="切换巡检系统">
+            <div class="system-menu-heading"><div><strong>切换系统</strong><small>选择需要巡检的业务系统</small></div><span id="system-count">载入中</span></div>
+            <div id="system-options"></div>
+          </div>
+        </div>
+        <span class="topbar-separator" aria-hidden="true"></span>
+        <div class="breadcrumbs"><span id="breadcrumb-system" class="sr-only">海外 SRM</span><span class="topbar-product">巡检控制台</span><i>/</i><b id="page-name">运行总览</b></div>
+      </div>
+      <div class="top-actions">
+        <button id="command-trigger" class="command-trigger" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>搜索页面、检查项或报告</span><kbd>⌘ K</kbd></button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式"><svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"/></svg><svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+        <div class="user-menu">
+          <button id="user-menu-trigger" class="user-menu-trigger" type="button" aria-haspopup="menu" aria-expanded="false" title="账户菜单">
+            <span id="user-avatar" class="user-avatar" aria-hidden="true">A</span>
+            <span class="user-menu-copy"><small>当前用户</small><strong id="current-username">管理员</strong></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+          </button>
+          <div id="user-menu-popover" class="user-menu-popover hidden" role="menu">
+            <div class="user-menu-summary"><span id="user-avatar-large" class="user-avatar large" aria-hidden="true">A</span><div><strong id="current-username-menu">管理员</strong><small>管理员账户 · 安全会话</small></div></div>
+            <button id="logout" type="button" role="menuitem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg><span>退出登录</span></button>
+          </div>
+        </div>
+        <button id="refresh" class="icon-button" type="button" aria-label="刷新数据" title="刷新数据"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg></button>
+        <div class="run-menu">
+          <button id="run" class="button primary run-main"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z"/></svg><span>执行 API + UI</span></button>
+          <button id="run-menu-trigger" class="button primary run-chevron" type="button" aria-label="选择巡检范围" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg></button>
+          <div id="run-menu-popover" class="run-menu-popover hidden" role="menu">
+            <button type="button" role="menuitem" data-run-targets="api,ui"><b>API + UI</b><small>依次执行全部已启用检查</small></button>
+            <button type="button" role="menuitem" data-run-targets="api"><b>仅 API</b><small>不启动浏览器</small></button>
+            <button type="button" role="menuitem" data-run-targets="ui"><b>仅 UI</b><small>只执行 UI 场景</small></button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="overview" class="view is-entering">
+        <div class="heading overview-heading">
+          <div><h1>运行总览</h1><p id="overview-description">聚合当前系统关键接口的最新健康状态、趋势与运行证据。</p></div>
+          <div class="overview-heading-aside">
+            <span id="overview-runtime-status" class="runtime-status neutral"><i aria-hidden="true"></i><span>状态载入中</span></span>
+            <span id="overview-last-run" class="heading-meta">最近巡检 —</span>
+            <span id="config-version" class="version"></span>
+          </div>
+        </div>
+        <div class="overview-toolbar">
+          <div class="overview-section-title"><h2>运行分析</h2><p>按时间范围观察健康度、结果构成和接口耗时。</p></div>
+          <div class="overview-filter-actions">
+            <div id="analytics-range" class="segmented overview-range" role="radiogroup" aria-label="图表时间范围"><button class="segment-tab active" type="button" data-analytics-range="12" role="radio" aria-checked="true">最近 12 轮</button><button class="segment-tab" type="button" data-analytics-range="30" role="radio" aria-checked="false">最近 30 轮</button><button class="segment-tab" type="button" data-analytics-range="7d" role="radio" aria-checked="false">近 7 天</button><button class="segment-tab" type="button" data-analytics-range="30d" role="radio" aria-checked="false">近 30 天</button></div>
+            <label class="comparison-toggle"><input id="analytics-compare" type="checkbox" checked><span>对比上一周期</span></label>
+          </div>
+        </div>
+        <div class="stats">
+          <article id="health-card" class="stat health-stat" data-tone="neutral">
+            <div class="stat-head"><span class="stat-title"><i class="metric-icon health"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.7A4 4 0 0 1 19 11c0 5.7-7 10-7 10Z"/><path d="m8.5 12 2 2 4.5-5"/></svg></i>当前健康状态</span><span id="current-health-state" class="status-pill neutral">待执行</span></div>
+            <div class="health-card-body">
+              <div class="health-card-copy">
+                <div class="stat-value"><strong id="current-health-value" aria-live="polite">—</strong></div>
+                <div class="health-signal"><i id="current-health-dot" aria-hidden="true"></i><span id="current-health-detail">等待首次巡检</span></div>
+              </div>
+              <div class="health-card-scan">
+                <div class="health-radar" aria-hidden="true">
+                  <span class="health-radar-grid"></span><span class="health-radar-sweep"></span>
+                  <span class="health-radar-node node-a"></span><span class="health-radar-node node-b"></span><span class="health-radar-node node-c"></span>
+                  <span class="health-radar-center"></span>
+                </div>
+                <em id="current-health-meta">检查项载入中</em>
+              </div>
+            </div>
+            <small id="health-card-hint">尚无可用运行证据</small>
+          </article>
+          <article id="pass-rate-card" class="stat analytics-stat"><div class="stat-head"><span class="stat-title"><i class="metric-icon rate"><svg viewBox="0 0 24 24"><path d="M12 3v9h9A9 9 0 1 1 12 3Z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15Z"/></svg></i>检查项通过率</span><span id="pass-rate-change" class="change-badge neutral" title="通过率较上一周期的相对变化">—</span></div><div class="stat-value"><strong id="period-pass-rate" aria-live="polite">—</strong><span id="pass-rate-spark" class="stat-spark" aria-hidden="true"></span></div><small id="pass-rate-hint">当前筛选周期暂无运行</small></article>
+          <article id="duration-card" class="stat analytics-stat"><div class="stat-head"><span class="stat-title"><i class="metric-icon duration"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i>平均巡检耗时</span><span id="duration-change" class="change-badge neutral" title="平均耗时较上一周期的相对变化">—</span></div><div class="stat-value"><strong id="period-duration" aria-live="polite">—</strong><span id="duration-spark" class="stat-spark" aria-hidden="true"></span></div><small id="duration-hint">按完整巡检轮次统计</small></article>
+          <article id="incident-card" class="stat"><div class="stat-head"><span class="stat-title"><i class="metric-icon incident"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></i>未恢复告警</span></div><div class="stat-value"><strong id="open-incident-count">—</strong><em id="failed-run-count">—</em></div><div id="period-result-progress" class="metric-track metric-stacked" role="img" aria-label="暂无检查结果"><span id="period-result-passed" class="segment passed"></span><span id="period-result-failed" class="segment failed"></span><span id="period-result-skipped" class="segment skipped"></span></div><small id="incident-hint">当前筛选周期运行稳定</small></article>
+        </div>
+        <section id="attention-panel" class="panel attention-panel is-healthy" aria-labelledby="attention-title">
+          <div class="attention-head"><div class="attention-heading"><span id="attention-icon" class="attention-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><h2 id="attention-title">运行稳定</h2><p id="attention-summary">当前没有需要处理的运行异常。</p></div></div><span id="attention-count" class="badge good">0 项待处理</span></div>
+          <div id="attention-items" class="attention-items"></div>
+        </section>
+        <div class="analytics-grid">
+          <article class="panel chart-card chart-card-wide"><div class="chart-card-head"><div><h2>通过率与耗时趋势</h2><p>点击通过率节点查看对应运行报告。</p></div><div class="chart-head-side"><span class="chart-legend trend-legend"><i class="rate"></i>通过率<i class="duration"></i>耗时<i class="previous"></i>上一周期</span><div class="chart-summary"><strong id="trend-current-rate">—</strong><span id="trend-current-duration" class="trend-duration-summary">平均耗时 —</span><span id="trend-range" class="panel-meta">暂无记录</span></div></div></div><div id="pass-rate-chart" class="chart-empty">暂无运行数据</div></article>
+          <article class="panel chart-card"><div class="chart-card-head"><div><h2>每轮结果构成</h2><p>通过、失败与跳过检查项的逐轮分布。</p></div><span class="chart-legend"><i class="passed"></i>通过<i class="failed"></i>失败<i class="skipped"></i>跳过</span></div><div id="result-mix-chart" class="chart-empty">暂无运行数据</div></article>
+          <article class="panel chart-card"><div class="chart-card-head"><div><h2>模块健康度</h2><p>按业务模块汇总当前周期的检查结果。</p></div><span id="category-caption" class="panel-meta">暂无数据</span></div><div id="category-health" class="chart-empty">暂无模块数据</div></article>
+          <article class="panel chart-card"><div class="chart-card-head"><div><h2>慢检查项</h2><p>按当前周期平均耗时排序，点击可查看相关报告。</p></div><span id="slow-caption" class="panel-meta">暂无数据</span></div><div id="slow-checks" class="chart-empty">暂无耗时数据</div></article>
+        </div>
+        <div class="overview-utility">
+          <article class="panel"><div class="panel-title"><div><h2>最近一次巡检</h2><p>状态与诊断摘要</p></div><span id="health-badge" class="badge neutral">待执行</span></div><div id="health-content" class="empty">尚无巡检报告。请先核实接口配置与业务断言。</div></article>
+          <article class="panel"><div class="panel-title"><div><h2>快捷操作</h2><p>常用巡检工作流</p></div></div><div class="action-list horizontal"><button data-target="checks"><span class="action-icon">✓</span><span><b>查看巡检项</b><small>核对接口及启用状态</small></span><i>→</i></button><button data-target="reports"><span class="action-icon">↗</span><span><b>历史报告</b><small>查看断言与诊断证据</small></span><i>→</i></button></div></article>
+        </div>
+        <div id="chart-tooltip" class="chart-tooltip hidden" role="tooltip"></div>
+      </section>
+
+      <section id="help" class="view help-center hidden" aria-labelledby="help-title">
+        <div class="help-hero">
+          <div class="help-hero-copy"><span class="help-eyebrow"><i aria-hidden="true"></i>SRM INSPECTION · KNOWLEDGE BASE</span><h1 id="help-title">让每一次巡检，<br>都有章可循。</h1><p>从首次配置到日常运维，在这里找到清晰、可靠的操作指引。</p><label class="help-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr-only">搜索帮助文档</span><input id="help-search" type="search" placeholder="搜索使用说明，如：登录、断言、告警…" autocomplete="off"><span class="help-search-hint" aria-hidden="true">搜索文档</span></label><div class="help-hero-tags"><span>API 与 UI 双层巡检</span><i></i><span>多系统独立管理</span><i></i><span>操作与排障指南</span></div></div>
+          <div class="help-hero-art" aria-hidden="true"><div class="help-orbit orbit-one"></div><div class="help-orbit orbit-two"></div><span class="help-art-dot dot-one"></span><span class="help-art-dot dot-two"></span><div class="help-book"><svg viewBox="0 0 100 100"><path d="M50 28c-13-8-25-8-38-3v48c13-5 25-5 38 3 13-8 25-8 38-3V25c-13-5-25-5-38 3ZM50 28v48M23 39l15 2M23 49l15 2M23 59l10 1M62 41l15-2M62 51l15-2M62 61l10-1"/></svg><span>THE FIELD GUIDE</span></div><div class="help-art-caption"><span>01 — 07</span><b>从入门，到从容。</b></div></div>
+        </div>
+        <div class="help-shortcuts" aria-label="推荐阅读">
+          <button type="button" data-help-topic="start"><span class="help-shortcut-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 3-9 11h7l-1 7 10-12h-7l1-6Z"/></svg></span><span><small>GET STARTED</small><b>完成第一次巡检</b><em>跟随 5 步指引，建立完整工作流</em></span><i aria-hidden="true">↗</i></button>
+          <button type="button" data-help-topic="api"><span class="help-shortcut-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8 4 12l4 4M16 8l4 4-4 4M14 4l-4 16"/></svg></span><span><small>CONFIGURE</small><b>配置你的巡检项</b><em>读懂请求、变量与业务断言</em></span><i aria-hidden="true">↗</i></button>
+          <button type="button" data-help-topic="faq"><span class="help-shortcut-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1.5 1-1.5 1-1.5 3M12 17h.01"/></svg></span><span><small>TROUBLESHOOT</small><b>找到问题的答案</b><em>快速排查登录、运行与通知异常</em></span><i aria-hidden="true">↗</i></button>
+        </div>
+        <div id="help-search-results" class="help-search-results hidden" aria-labelledby="help-results-title"><div class="help-results-head"><div><span class="help-kicker">SEARCH RESULTS</span><h2 id="help-results-title">搜索结果</h2><p id="help-result-count" role="status" aria-live="polite"></p></div><button id="help-search-clear" class="button secondary" type="button">返回使用指南</button></div><div id="help-result-list"></div></div>
+        <div id="help-library" class="help-library">
+          <aside class="help-doc-nav"><div class="help-nav-heading"><span class="help-kicker">THE HANDBOOK</span><h2>使用指南 <span>07</span></h2></div><nav id="help-topics" aria-label="帮助文档章节"></nav><div class="help-nav-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg><b>用自动化巡检，验证业务流程</b><p>先验证，再启用。让每次执行都有可追溯的证据。</p></div></aside>
+          <article id="help-article" class="help-article" aria-labelledby="help-article-title"></article>
+          <aside class="help-toc"><span class="help-kicker">ON THIS PAGE</span><h2>本篇目录</h2><nav id="help-toc-links" aria-label="本篇目录"></nav><div class="help-toc-tip"><span>阅读提示</span><p>顶部选择的系统决定实际配置、报告和告警的归属。</p></div></aside>
+        </div>
+        <footer class="help-footer"><span>SRM 巡检中心 · 产品使用手册</span><span>配置 → 验证 → 执行 → 复盘</span></footer>
+      </section>
+
+      <section id="checks" class="view hidden">
+        <div class="report-hero check-hero">
+          <div class="report-hero-copy"><span id="check-eyebrow" class="report-eyebrow">接口维度 · 独立巡检清单</span><h1 id="check-page-title">API 巡检项</h1><p id="checks-description">查看当前系统的 API 接口、启用状态与配置详情。</p></div>
+          <div class="report-kind-switcher check-kind-switcher" role="tablist" aria-label="巡检项类型">
+            <button class="report-kind-tab check-kind-tab active" type="button" role="tab" aria-selected="true" data-check-kind="api"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9 4 12l4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>API 巡检项</button>
+            <button class="report-kind-tab check-kind-tab" type="button" role="tab" aria-selected="false" data-check-kind="ui"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h4M7 13h8"/></svg>UI 场景项</button>
+          </div>
+          <span id="check-summary" class="report-hero-summary">—</span>
+        </div>
+        <div class="workspace-metrics check-metrics" aria-label="巡检项概览">
+          <article><span id="checks-total-label">API 总数</span><strong id="checks-total-count">—</strong><small id="checks-total-hint">当前系统接口配置</small></article>
+          <article><span id="checks-enabled-label">已启用</span><strong id="checks-enabled-count">—</strong><small id="checks-enabled-hint">参与自动 API 巡检</small></article>
+          <article><span id="checks-pending-label">待配置</span><strong id="checks-pending-count">—</strong><small id="checks-pending-hint">完成核实后启用</small></article>
+          <article><span id="checks-module-label">业务模块</span><strong id="checks-module-count">—</strong><small id="checks-module-hint">已覆盖模块</small></article>
+        </div>
+        <article class="panel data-panel workspace-panel">
+          <div class="table-toolbar"><label class="search-field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="check-search" type="search" placeholder="搜索名称、模块、ID 或路径"></label><select id="check-category-filter" aria-label="按业务模块筛选"><option value="">全部模块</option></select><select id="check-status-filter" aria-label="按状态筛选"><option value="">全部状态</option><option value="enabled">已启用</option><option value="disabled">待配置</option></select><button id="check-filter-reset" class="button secondary filter-reset hidden" type="button">清除筛选</button><span id="check-filter-result" class="toolbar-result">显示 0 项</span></div>
+          <div class="table-wrap"><table><thead><tr><th>序号</th><th id="checks-name-heading">API 巡检项</th><th>业务模块</th><th id="checks-target-heading">请求</th><th>状态</th></tr></thead><tbody id="checks-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <section id="reports" class="view hidden">
+        <div class="report-hero">
+          <div class="report-hero-copy"><span id="report-eyebrow" class="report-eyebrow">接口维度 · 独立数据口径</span><h1 id="report-page-title">API 巡检历史报告</h1><p id="report-page-description">聚焦接口可用性、响应性能与断言失败，快速定位后端异常。</p></div>
+          <div class="report-kind-switcher" role="tablist" aria-label="报告类型">
+            <button class="report-kind-tab active" type="button" role="tab" aria-selected="true" data-report-kind="api"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9 4 12l4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>API 巡检</button>
+            <button class="report-kind-tab" type="button" role="tab" aria-selected="false" data-report-kind="ui"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3M7 9h4M7 13h8"/></svg>UI 场景</button>
+          </div>
+          <span id="reports-summary" class="report-hero-summary">—</span>
+        </div>
+        <div class="workspace-metrics report-metrics" aria-label="报告概览">
+          <article><span id="report-total-label">API 报告</span><strong id="report-total-count">—</strong><small id="report-total-hint">当前独立留存范围</small></article>
+          <article><span id="report-rate-label">接口通过率</span><strong id="report-success-rate">—</strong><small id="report-rate-hint">按接口检查项统计</small></article>
+          <article><span id="report-failed-label">失败接口</span><strong id="report-failed-count">—</strong><small id="report-failed-hint">优先核对断言证据</small></article>
+          <article><span id="report-performance-label">P95 响应</span><strong id="report-scheduled-count">—</strong><small id="report-performance-hint">最近报告性能指标</small></article>
+        </div>
+        <div class="report-toolbar report-filterbar"><label class="search-field report-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="report-search" type="search" placeholder="搜索运行标识"></label><select id="report-status-filter" aria-label="报告状态"><option value="">全部结果</option><option value="passed">通过</option><option value="failed">失败</option></select><select id="report-trigger-filter" aria-label="触发方式"><option value="">全部触发方式</option><option value="manual">手动</option><option value="scheduled">定时</option></select><button id="report-filter-reset" class="button secondary filter-reset hidden" type="button">清除筛选</button><button id="download-report" class="button secondary hidden">下载 JSON</button></div>
+        <div class="grid report-grid"><article class="panel report-master"><div class="panel-title"><div><h2 id="report-range">API 最近 30 轮</h2><p id="report-list-summary">独立分页 · 按时间倒序</p></div></div><div id="report-list" class="report-list empty">暂无 API 巡检报告</div></article><article class="panel report-detail-panel"><div class="panel-title report-detail-title"><div><span id="report-detail-kind" class="report-detail-kind api">API REPORT</span><h2 id="report-detail-heading">接口健康度与诊断证据</h2><p id="report-caption">选择一轮 API 巡检查看接口证据</p></div><div id="report-detail-actions" class="report-detail-actions hidden"><div class="segmented compact-segmented" role="group" aria-label="检查结果筛选"><button class="segment-tab active" type="button" data-report-check-filter="all">全部</button><button class="segment-tab" type="button" data-report-check-filter="failed">失败</button><button class="segment-tab" type="button" data-report-check-filter="skipped">跳过</button></div></div></div><div id="report-detail" class="empty">尚未选择 API 报告</div></article></div>
+      </section>
+
+      <section id="incidents" class="view hidden">
+        <div class="heading"><div><h1>告警中心</h1><p>查看连续失败形成的事件、恢复记录与通知投递结果。</p></div><button id="test-notification" class="button secondary" type="button">发送测试通知</button></div>
+        <div class="workspace-metrics incident-metrics" aria-label="告警概览">
+          <article><span>未恢复事件</span><strong id="incident-open-count">—</strong><small>当前需要处理</small></article>
+          <article><span>已恢复事件</span><strong id="incident-recovered-count">—</strong><small>历史恢复记录</small></article>
+          <article><span>待投递通知</span><strong id="notification-pending-count">—</strong><small>包含自动重试</small></article>
+          <article><span>投递失败</span><strong id="notification-failed-count">—</strong><small>需要核对 Webhook</small></article>
+        </div>
+        <div class="segmented incident-tabs" role="tablist" aria-label="告警视图"><button class="segment-tab active" data-incident-tab="events" role="tab" aria-selected="true">故障事件 <span id="incident-event-tab-count">0</span></button><button class="segment-tab" data-incident-tab="deliveries" role="tab" aria-selected="false">通知投递 <span id="incident-delivery-tab-count">0</span></button></div>
+        <article class="panel data-panel incident-panel" data-incident-panel="events"><div class="panel-title"><div><h2>故障事件</h2><p>达到失败阈值的检查项会打开事件</p></div><span id="incident-summary" class="badge neutral">—</span></div><div class="table-toolbar compact-toolbar"><label class="search-field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="incident-search" type="search" placeholder="搜索检查项、分类或原因"></label><select id="incident-status-filter" aria-label="事件状态"><option value="">全部状态</option><option value="open">告警中</option><option value="resolved">已恢复</option></select><select id="incident-severity-filter" aria-label="事件级别"><option value="">全部级别</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option></select><button id="incident-filter-reset" class="button secondary filter-reset hidden" type="button">清除筛选</button><span id="incident-filter-result" class="toolbar-result">显示 0 项</span></div><div class="table-wrap"><table><thead><tr><th>状态</th><th>检查项</th><th>级别</th><th>故障原因</th><th>首次失败</th><th>恢复时间</th></tr></thead><tbody id="incidents-body"></tbody></table></div></article>
+        <article class="panel data-panel incident-panel hidden" data-incident-panel="deliveries"><div class="panel-title"><div><h2>通知投递</h2><p>Webhook 使用持久化队列，失败时自动退避重试</p></div></div><div class="table-wrap"><table class="notification-table"><thead><tr><th>事件</th><th>状态</th><th>尝试次数</th><th>创建时间</th><th>发送时间 / 错误</th></tr></thead><tbody id="notifications-body"></tbody></table></div></article>
+      </section>
+
+      <section id="api-checks" class="view hidden">
+        <div class="heading"><div><h1>API 巡检</h1><p>配置 API 请求、会话变量、业务断言和告警策略。</p></div><div class="heading-actions"><button id="import-metersphere" class="button secondary" type="button">导入 MeterSphere</button><button id="add-auth-flow" class="button secondary" type="button">新建登录前置</button><button id="add-check" class="button primary" type="button"><span aria-hidden="true">＋</span> 新建 API 巡检</button></div></div>
+        <input id="metersphere-file" type="file" accept="application/json,.json" class="hidden">
+        <div class="workspace-metrics" aria-label="API 巡检概览">
+          <article><span>API 总数</span><strong id="api-check-total">—</strong><small>当前系统配置</small></article>
+          <article><span>已启用</span><strong id="api-check-enabled">—</strong><small>参与线上巡检</small></article>
+          <article><span>待启用</span><strong id="api-check-disabled">—</strong><small>草稿或待核实</small></article>
+          <article><span>业务模块</span><strong id="api-check-modules">—</strong><small>已覆盖模块</small></article>
+        </div>
+        <article class="panel workspace-panel auth-flow-panel">
+          <div class="panel-title"><div><h2>登录前置流程</h2><p>按顺序完成登录、提取 token 并验证身份，供本轮业务接口复用。</p></div><span id="auth-flow-count" class="badge neutral">0 个流程</span></div>
+          <div id="auth-flow-list" class="auth-flow-list" aria-live="polite"></div>
+        </article>
+        <article class="panel data-panel workspace-panel">
+          <div class="panel-title"><div><h2>API 巡检配置</h2><p>逐项维护请求、票据提取和业务断言；停用草稿不会参与自动巡检。</p></div><span id="api-check-summary" class="badge neutral">—</span></div>
+          <div class="table-toolbar api-check-toolbar"><label class="search-field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="api-check-search" type="search" placeholder="搜索名称、模块、ID 或路径"></label><select id="api-check-category" aria-label="按业务模块筛选"><option value="">全部模块</option></select><select id="api-check-status" aria-label="按启用状态筛选"><option value="">全部状态</option><option value="enabled">已启用</option><option value="disabled">待启用</option></select><button id="api-check-reset" class="button secondary filter-reset hidden" type="button">清除筛选</button><span id="api-check-result" class="toolbar-result">显示 0 项</span></div>
+          <div class="api-check-bulk-actions"><button id="api-check-enable" class="button primary" type="button" disabled>启用勾选项</button><span id="api-check-selection" class="toolbar-result" role="status" aria-live="polite" aria-atomic="true">已勾选 0 项</span><span class="api-check-selection-hint">全选仅作用于当前筛选结果</span></div>
+          <div class="table-wrap"><table class="config-table"><thead><tr><th class="api-check-select-cell"><label class="api-check-checkbox"><input id="api-check-select-all" type="checkbox" aria-label="全选当前筛选结果" disabled></label></th><th>序号</th><th>API 巡检</th><th>请求</th><th>断言 / 提取</th><th>状态</th><th></th></tr></thead><tbody id="api-checks-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <section id="ui-scenes" class="view hidden">
+        <div class="heading"><div><h1>UI 场景</h1><p>用可视化步骤编排线上页面巡检，每一步自动留存说明、断言和截图。</p></div><button id="ui-scene-add" class="button primary" type="button"><span aria-hidden="true">＋</span> 新建场景</button></div>
+        <div class="workspace-metrics" aria-label="UI 场景概览">
+          <article><span>场景总数</span><strong id="ui-scene-total">—</strong><small>当前系统配置</small></article>
+          <article><span>已启用</span><strong id="ui-scene-enabled">—</strong><small>参与线上巡检</small></article>
+          <article><span>已验证</span><strong id="ui-scene-verified">—</strong><small>完整测试通过</small></article>
+          <article><span>登录预检</span><strong id="ui-scene-login">—</strong><small>共享浏览器会话</small></article>
+        </div>
+        <article class="panel data-panel workspace-panel">
+          <div class="panel-title"><div><h2>场景配置</h2><p>停用草稿可随时保存；完整测试通过后才允许启用。</p></div><span id="ui-runtime-state" class="badge neutral">检测运行环境</span></div>
+          <div class="table-toolbar"><label class="search-field"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="ui-scene-search" type="search" placeholder="搜索场景、模块或路径"></label><select id="ui-scene-status" aria-label="按状态筛选"><option value="">全部状态</option><option value="enabled">已启用</option><option value="draft">草稿</option><option value="verified">已验证</option></select><span id="ui-scene-result" class="toolbar-result">显示 0 项</span></div>
+          <div id="ui-scene-list" class="ui-scene-list empty">暂无 UI 场景，点击“新建场景”开始配置。</div>
+        </article>
+      </section>
+
+      <section id="settings" class="view hidden">
+        <div class="heading"><div><h1>系统设置</h1><p>管理巡检环境、访问凭据、调度告警和运行策略。</p></div><div class="settings-heading-aside"><span id="settings-save-state" class="save-state saved"><i aria-hidden="true"></i>配置已同步</span><span id="settings-version" class="version">—</span></div></div>
+        <section id="settings-readiness" class="settings-readiness neutral" aria-labelledby="settings-risk-title"><span class="settings-readiness-icon" aria-hidden="true">✓</span><div><h2 id="settings-risk-title">正在检查配置</h2><p id="settings-risk-detail">载入环境、凭据和检查项状态。</p></div><span id="settings-readiness-badge" class="badge neutral">载入中</span></section>
+        <div class="workspace-metrics settings-metrics" aria-label="系统设置概览">
+          <article><span>环境配置</span><strong id="settings-env-state">—</strong><small id="settings-env-detail">等待载入</small></article>
+          <article><span>访问凭据</span><strong id="settings-credential-state">—</strong><small id="settings-credential-detail">等待载入</small></article>
+          <article><span>定时与告警</span><strong id="settings-operation-state">—</strong><small id="settings-operation-detail">等待载入</small></article>
+          <button class="settings-metric-link" type="button" data-target="api-checks"><span>API 巡检</span><strong id="settings-api-state">—</strong><small id="settings-api-detail">等待载入</small><i aria-hidden="true">→</i></button>
+          <button class="settings-metric-link" type="button" data-target="ui-scenes"><span>UI 场景</span><strong id="settings-ui-state">—</strong><small id="settings-ui-detail">等待载入</small><i aria-hidden="true">→</i></button>
+        </div>
+        <div class="settings-tabs" role="tablist" aria-label="配置分类"><button class="settings-tab active" data-settings-tab="environment" role="tab" aria-selected="true"><i aria-hidden="true"></i>基础环境</button><button class="settings-tab" data-settings-tab="operations" role="tab" aria-selected="false"><i aria-hidden="true"></i>调度与告警</button><button class="settings-tab" data-settings-tab="advanced" role="tab" aria-selected="false"><i aria-hidden="true"></i>高级配置</button></div>
+        <div class="settings-panel" data-settings-panel="environment"><form id="environment-form" class="panel config-panel settings-form-panel" novalidate><div class="panel-title"><div><h2>巡检环境</h2><p>凭据只交给本地后端，密码不会回显到页面。</p></div><span id="credential-status" class="badge neutral">凭据未配置</span></div>
+          <fieldset class="config-section"><legend><span>01</span><div><b>环境身份</b><small>确认系统、环境和请求目标。</small></div></legend><div class="form-grid"><label><span>系统标识</span><input id="config-system-id" required readonly pattern="[a-z0-9][a-z0-9_-]{1,63}"></label><label><span>环境名称</span><input id="config-environment" required></label><label class="span-2"><span>SRM 基础地址</span><input id="config-base-url" type="url" required placeholder="https://example.com"></label></div></fieldset>
+          <fieldset class="config-section"><legend><span>02</span><div><b>访问凭据</b><small>API 与 UI 凭据独立保存；敏感字段只写入本地凭据文件。</small></div></legend><div class="form-grid"><label><span>租户 / 主账号</span><input id="config-account" autocomplete="organization"></label><label><span>API 巡检账号</span><input id="config-username" autocomplete="username"></label><label><span>API 巡检密码</span><input id="config-password" type="password" autocomplete="new-password" placeholder="留空不修改"></label><label><span>Client ID</span><input id="config-client-id"></label><label><span>UI 登录账号</span><input id="config-ui-username" autocomplete="username"></label><label><span>UI 登录密码</span><input id="config-ui-password" type="password" autocomplete="new-password" placeholder="留空不修改"></label></div></fieldset>
+          <fieldset class="config-section"><legend><span>03</span><div><b>运行边界</b><small>控制单项超时和本地报告留存。</small></div></legend><div class="form-grid"><label><span>默认请求超时（秒）</span><input id="config-timeout" type="number" min="1" max="30" required></label><label><span>报告最多保留份数</span><input id="config-report-limit" type="number" min="1" max="1000" required></label></div></fieldset>
+          <div class="form-actions sticky-actions"><button id="config-preflight" class="button secondary" type="button">预检已保存配置</button><button id="config-reload" class="button secondary" type="button">重新加载</button><button class="button primary" type="submit">保存配置</button></div><p id="preflight-result" class="form-hint">预检只执行 API/UI 登录步骤，不运行后续业务查询。</p></form></div>
+        <div class="settings-panel hidden" data-settings-panel="operations"><article class="panel config-panel settings-form-panel"><div class="panel-title"><div><h2>调度、重跑与告警</h2><p>只有最终运行结果会写入报告并参与告警判断。</p></div><span id="webhook-status" class="badge neutral">Webhook 未配置</span></div>
+          <fieldset class="config-section"><legend><span>01</span><div><b>执行计划</b><small>设置自动巡检范围、频率和漏跑宽限。</small></div></legend><div class="form-grid"><label class="switch-option setting-toggle" data-setting-toggle="schedule"><input id="schedule-enabled" type="checkbox"><span><b>启用定时调度</b><small>按配置周期自动运行巡检</small></span><em class="switch-state" aria-hidden="true"></em></label><div class="setting-dependent schedule-dependent schedule-targets"><span>定时执行范围</span><label><input id="schedule-target-api" type="checkbox" value="api"><span>API 巡检</span></label><label><input id="schedule-target-ui" type="checkbox" value="ui"><span>UI 场景</span></label></div><label class="setting-dependent schedule-dependent"><span>调度模式</span><select id="schedule-mode"><option value="interval">固定间隔</option><option value="daily">每天固定时间</option></select></label><label class="setting-dependent schedule-dependent"><span>间隔分钟数</span><input id="schedule-interval" type="number" min="1" max="10080"></label><label class="setting-dependent schedule-dependent"><span>每天执行时间</span><input id="schedule-daily-times" placeholder="09:00,18:00"></label><label class="setting-dependent schedule-dependent"><span>调度时区</span><input id="schedule-timezone" placeholder="Asia/Shanghai"></label><label class="setting-dependent schedule-dependent"><span>漏跑宽限（分钟）</span><input id="schedule-grace" type="number" min="0" max="10080"></label></div></fieldset>
+          <fieldset class="config-section"><legend><span>02</span><div><b>失败重跑</b><small>API/UI 分阶段重建会话，仅保留最终结果。</small></div></legend><div class="form-grid"><label class="switch-option setting-toggle" data-setting-toggle="retry"><input id="run-retry-enabled" type="checkbox"><span><b>巡检失败自动重跑</b><small>只重跑失败阶段，不重复执行已成功阶段</small></span><em class="switch-state" aria-hidden="true"></em></label><label class="setting-dependent retry-dependent"><span>最多重跑次数</span><input id="run-retry-max" type="number" min="0" max="5"></label><label class="setting-dependent retry-dependent"><span>重跑间隔（秒）</span><input id="run-retry-delay" type="number" min="1" max="3600"></label></div></fieldset>
+          <fieldset class="config-section"><legend><span>03</span><div><b>告警策略</b><small>配置触发阈值、恢复规则和投递通道。</small></div></legend><div class="form-grid"><label class="switch-option setting-toggle" data-setting-toggle="alerts"><input id="alerts-enabled" type="checkbox"><span><b>启用告警通知</b><small>最终失败与恢复时发送通知</small></span><em class="switch-state" aria-hidden="true"></em></label><label class="switch-option setting-toggle setting-toggle-secondary alert-dependent" data-setting-toggle="success"><input id="alerts-notify-success" type="checkbox"><span><b>成功也通知</b><small>任意巡检最终成功时发送</small></span><em class="switch-state" aria-hidden="true"></em></label><label class="setting-dependent alert-dependent"><span>默认严重级别</span><select id="alerts-severity"><option>P1</option><option selected>P2</option><option>P3</option></select></label><label class="setting-dependent alert-dependent"><span>连续失败阈值</span><input id="alerts-failure-threshold" type="number" min="1" max="20"></label><label class="setting-dependent alert-dependent"><span>连续恢复阈值</span><input id="alerts-recovery-threshold" type="number" min="1" max="20"></label><label class="setting-dependent alert-dependent"><span>重复提醒间隔（分钟）</span><input id="alerts-repeat" type="number" min="0" max="10080"></label><label class="setting-dependent alert-dependent"><span>巡检平台访问地址</span><input id="alerts-report-base-url" type="url" placeholder="https://inspection.example.com"><small>用于生成钉钉报告按钮；留空使用部署环境变量</small></label><label class="setting-dependent alert-dependent"><span>通用 Webhook 地址</span><input id="alerts-webhook" type="password" autocomplete="new-password" placeholder="留空不修改"></label><label class="setting-dependent alert-dependent"><span>钉钉加签密钥（可选）</span><input id="alerts-dingtalk-secret" type="password" autocomplete="new-password" placeholder="留空不修改"></label></div></fieldset>
+          <div class="form-actions sticky-actions"><button id="save-operations" class="button primary" type="button">保存调度、重跑与告警</button></div><p class="form-hint">重跑期间持续持有任务锁；登录失败导致的后续跳过项不会重复告警。</p></article></div>
+        <div class="settings-panel hidden" data-settings-panel="advanced"><details class="panel config-panel advanced-panel" open><summary><span><b>高级配置</b><small>完整 JSON、整体校验与脱敏导出</small></span><span>收起</span></summary><div class="advanced-body"><div class="advanced-notice"><b>兼容入口</b><span>API 和 UI 请优先在各自工作区维护；此处只用于整体校验与故障恢复。保存完整 JSON 会同时更新三个配置域。</span></div><textarea id="advanced-config" class="code-editor" spellcheck="false" aria-label="完整配置 JSON"></textarea><div class="form-actions sticky-actions"><button id="validate-config" class="button secondary" type="button">校验 JSON</button><button id="export-config" class="button secondary" type="button">导出完整备份</button><button id="save-advanced" class="button primary" type="button">保存完整 JSON</button></div></div></details></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="api-editor-layer" class="api-editor-layer hidden" aria-hidden="true">
+    <section class="api-editor-dialog" role="dialog" aria-modal="true" aria-labelledby="api-editor-title">
+      <form id="check-form" class="api-editor" novalidate>
+        <header class="api-editor-head">
+          <div><span class="section-kicker">API INSPECTION</span><h2 id="api-editor-title">新增 API 巡检</h2><p id="api-editor-description">先保存为停用草稿，测试通过后再启用。</p></div>
+          <div class="api-editor-head-actions"><span id="api-editor-test-state" class="badge neutral">尚未测试</span><button id="api-editor-close" class="icon-button" type="button" aria-label="关闭">×</button></div>
+        </header>
+        <input id="check-index" type="hidden">
+        <div id="auth-flow-meta" class="auth-flow-meta hidden">
+          <label><span>流程 ID</span><input id="auth-flow-id" maxlength="64" placeholder="ubd-login"></label>
+          <label><span>流程名称</span><input id="auth-flow-name" placeholder="UBD 登录流程"></label>
+          <label><span>输出变量映射 JSON</span><textarea id="auth-flow-outputs" class="code-editor" spellcheck="false" placeholder='{"token":"suposTicket"}'></textarea><small>左侧是后续接口使用的变量，右侧是步骤提取的变量。</small></label>
+          <label id="auth-flow-browser-entry-field"><span>UI 默认登录入口（可选）</span><input id="auth-flow-browser-entry" placeholder="https://业务系统/#/user/oauth?ticket=${token}"><small>UI 场景选择此流程后自动使用该入口；仅依赖 Cookie 时可留空。</small></label>
+        </div>
+        <div class="api-editor-meta">
+          <label><span>检查项 ID</span><input id="check-id" required maxlength="64" pattern="[a-z0-9][a-z0-9_-]{1,63}" placeholder="supplier-detail"><small id="check-id-hint" class="field-hint">支持输入 camelCase，保存时自动转换为小写短横线格式。</small></label>
+          <label><span>名称</span><input id="check-name" required placeholder="供应商主数据详情"></label>
+          <label><span>业务模块</span><input id="check-category" required placeholder="供应商主数据"></label>
+          <label><span>请求方法</span><select id="check-method"><option>GET</option><option selected>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option></select></label>
+          <label><span>严重级别</span><select id="check-severity"><option>P1</option><option selected>P2</option><option>P3</option></select></label>
+        </div>
+        <div class="api-editor-body">
+          <aside class="api-section-rail" aria-label="API 配置导航">
+            <div class="api-section-rail-head"><h3>接口配置</h3><small id="api-editor-completion">0 / 4 已完成</small></div>
+            <div id="auth-flow-steps" class="hidden"></div>
+            <div id="auth-flow-step-actions" class="auth-flow-step-actions hidden"><button id="auth-step-add" class="button secondary" type="button">添加步骤</button><button id="auth-step-up" class="button secondary" type="button">上移</button><button id="auth-step-down" class="button secondary" type="button">下移</button><button id="auth-step-remove" class="button secondary danger-button" type="button">移除当前步骤</button></div>
+            <nav>
+              <button class="api-section-link active" type="button" data-api-section="api-section-basic"><span>01</span><i><b>基础信息</b><small>请求入口与执行边界</small></i><em aria-hidden="true">•</em></button>
+              <button class="api-section-link" type="button" data-api-section="api-section-request"><span>02</span><i><b>请求配置</b><small>Headers 与 Body</small></i><em aria-hidden="true">•</em></button>
+              <button class="api-section-link" type="button" data-api-section="api-section-validation"><span>03</span><i><b>断言与提取</b><small>验证业务结果并传递变量</small></i><em aria-hidden="true">•</em></button>
+              <button class="api-section-link" type="button" data-api-section="api-section-alerts"><span>04</span><i><b>告警策略</b><small>失败告警</small></i><em aria-hidden="true">•</em></button>
+            </nav>
+            <div class="api-rail-note"><b>测试说明</b><p>测试会先执行当前系统已启用的会话准备项，但不会写入正式报告或触发告警。</p></div>
+          </aside>
+          <main id="api-editor-form-scroll" class="api-editor-form">
+            <p id="api-editor-blockers" class="api-editor-blockers hidden" role="status"></p>
+            <section id="api-section-basic" class="api-config-section" data-api-config-section>
+              <div class="api-config-section-title"><span>01</span><div><h3>基础信息</h3><p>定义请求入口、预期状态和执行超时。</p></div></div>
+              <div class="form-grid api-editor-grid"><label id="check-auth-flow-field" class="span-2"><span>登录前置流程</span><select id="check-auth-flow"><option value="">不引用登录流程</option></select><small class="field-hint">执行所选流程后可通过 ${token} 使用凭证，同一轮巡检只执行一次。</small></label><label class="span-2"><span>请求路径或完整 URL</span><input id="check-path" required placeholder="/api/path 或 https://example.com/api/path"><small id="check-path-hint" class="field-hint">当前系统同源 URL 会自动转换为站内路径。</small></label><label><span>预期 HTTP 状态码</span><input id="check-expected-status" type="number" min="100" max="599" required value="200"></label><label><span>超时（秒）</span><input id="check-timeout" type="number" min="1" max="30" placeholder="使用环境默认值"></label></div>
+            </section>
+            <section id="api-section-request" class="api-config-section" data-api-config-section>
+              <div class="api-config-section-title"><span>02</span><div><h3>请求配置</h3><p>配置请求编码、Headers 和 Body。</p></div></div>
+              <div class="form-grid api-editor-grid"><label><span>响应类型</span><select id="check-response-type"><option value="json">JSON</option><option value="text">文本 / HTML</option></select></label><label><span>自动跟随重定向</span><input id="check-follow-redirects" type="checkbox"><small class="field-hint">需要从 302 响应头提取 ticket 时关闭。</small></label><label><span>请求体类型</span><select id="check-encoding"><option value="json">JSON</option><option value="form">表单</option></select></label><label class="span-2"><span>请求头 JSON</span><textarea id="check-headers" class="code-editor compact" spellcheck="false" placeholder='{
+  "Accept": "application/json",
+  "Authorization": "Bearer ${ticket}"
+}'></textarea><small class="field-hint">填写 JSON 对象，一行一个请求头；支持 <code>${变量名}</code> 引用前序接口提取值。留空表示不额外添加请求头，Content-Type 会按请求体类型自动设置。</small></label><label class="span-2"><span>请求体 JSON</span><textarea id="check-body" class="code-editor" spellcheck="false" placeholder='{
+  "pageNum": 1,
+  "pageSize": 20,
+  "account": "${SRM_ACCOUNT}"
+}'></textarea><small class="field-hint">填写要发送的 JSON；支持 <code>${变量名}</code>、<code>${变量名|base64}</code> 和 <code>${变量名|lower}</code>。转换仅在发送时执行。留空按空对象处理。</small></label></div>
+            </section>
+            <section id="api-section-validation" class="api-config-section" data-api-config-section>
+              <div class="api-config-section-title"><span>03</span><div><h3>断言与提取</h3><p>业务断言决定成功与否，响应变量可供后续接口使用。</p></div></div>
+              <div class="form-grid api-editor-grid"><label class="span-2"><span>业务断言 JSON</span><textarea id="check-assertions" class="code-editor compact" spellcheck="false" placeholder='[
+  {"path": "$.code", "op": "equals", "value": 100000000},
+  {"path": "$.data", "op": "present"}
+]'></textarea><small class="field-hint">填写断言数组；<code>path</code> 使用 <code>$.字段</code>，常用操作包括 equals、present、nonempty、contains。</small></label><label class="span-2"><span>响应变量提取 JSON</span><textarea id="check-extract" class="code-editor compact" spellcheck="false" placeholder='[
+  {"variable": "supplier_id", "path": "$.data.id"}
+]'></textarea><small class="field-hint">将响应字段保存为变量，后续接口可通过 <code>${supplier_id}</code> 引用。留空表示不提取变量。</small></label></div>
+            </section>
+            <section id="api-section-alerts" class="api-config-section" data-api-config-section>
+              <div class="api-config-section-title"><span>04</span><div><h3>告警策略</h3><p>设置巡检失败时的告警行为。</p></div></div>
+              <div class="api-safety-options"><label class="api-safety-option"><input id="check-alert-enabled" type="checkbox"><i><b>启用后允许告警</b><small>巡检失败时按系统告警策略发送通知</small></i></label></div>
+            </section>
+          </main>
+          <aside class="api-test-panel">
+            <div class="api-test-panel-head"><div><h3>测试与响应</h3><small>当前编辑内容的临时测试结果</small></div></div>
+            <div id="check-test-result" class="api-test-empty"><span>◎</span><b>等待测试</b><p>完成必要配置后点击“测试接口”，结果将在这里展示。</p></div>
+          </aside>
+        </div>
+        <footer class="api-editor-actions"><span id="api-editor-save-hint">草稿不会参与自动巡检</span><div><button id="check-cancel" class="button secondary" type="button">取消</button><button id="check-save-draft" class="button secondary" type="button">保存草稿</button><button id="check-test" class="button secondary" type="button">测试接口</button><button id="check-save-enable" class="button primary" type="submit">保存并启用</button></div></footer>
+      </form>
+    </section>
+  </div>
+
+  <div id="ui-editor-layer" class="ui-editor-layer hidden" aria-hidden="true">
+    <section class="ui-editor" role="dialog" aria-modal="true" aria-labelledby="ui-editor-title">
+      <header class="ui-editor-head"><div><span class="section-kicker">UI INSPECTION SCENARIO</span><h2 id="ui-editor-title">新建 UI 场景</h2><p>按真实用户路径编排操作步骤，测试结果会逐步生成截图证据。</p></div><div class="ui-editor-head-actions"><span id="ui-editor-test-state" class="badge neutral">尚未完整测试</span><button id="ui-editor-close" class="icon-button" type="button" aria-label="关闭">×</button></div></header>
+      <div class="ui-editor-meta">
+        <input id="ui-scene-index" type="hidden">
+        <label><span>场景 ID</span><input id="ui-scene-id" required maxlength="64" placeholder="supplier-list-visible"></label>
+        <label><span>场景名称</span><input id="ui-scene-name" required placeholder="供应商列表可正常访问"></label>
+        <label><span>业务模块</span><input id="ui-scene-category" required placeholder="供应商管理"></label>
+        <label><span>严重级别</span><select id="ui-scene-severity"><option>P1</option><option selected>P2</option><option>P3</option></select></label>
+        <label class="check-option"><input id="ui-scene-login-precheck" type="checkbox"><span>可作为登录前置</span></label>
+        <label class="check-option"><input id="ui-scene-alert" type="checkbox"><span>失败时告警</span></label>
+      </div>
+      <div class="ui-editor-body">
+        <aside class="ui-step-rail"><div class="ui-step-rail-head"><div><h3>步骤时间线</h3><small id="ui-step-count">0 个步骤</small></div><button id="ui-step-add" class="button secondary compact-button" type="button">＋ 步骤</button></div><section class="ui-auth-dependency"><label for="ui-scene-auth-dependency"><span>运行前置条件</span><select id="ui-scene-auth-dependency"><option value="">不使用前置登录态</option></select></label><label id="ui-api-entry-field" class="hidden" for="ui-api-entry-url"><span>浏览器登录入口</span><input id="ui-api-entry-url" placeholder="https://业务系统/#/user/oauth?ticket=${token}" aria-describedby="ui-api-entry-hint"><small id="ui-api-entry-hint" class="field-hint">使用流程输出变量，例如 ${token}。仅依赖 Cookie 时可留空。</small></label><div id="ui-auth-dependency-item" class="ui-auth-dependency-item"><span>00</span><i><b>未关联登录场景</b><small>业务步骤将直接执行</small></i></div></section><div id="ui-step-list-editor" class="ui-step-list-editor"></div></aside>
+        <main class="ui-step-form"><div class="ui-step-form-head"><div><span id="ui-step-number" class="step-number">STEP 01</span><h3>步骤配置</h3></div><div><button id="ui-step-up" class="icon-button" type="button" title="上移">↑</button><button id="ui-step-down" class="icon-button" type="button" title="下移">↓</button><button id="ui-step-duplicate" class="icon-button" type="button" title="复制">⧉</button><button id="ui-step-delete" class="icon-button danger-icon" type="button" title="删除">×</button></div></div>
+          <div class="form-grid ui-step-fields">
+            <label><span>步骤 ID</span><input id="ui-step-id" placeholder="open-list"></label><label><span>动作</span><select id="ui-step-action"><option value="goto">打开页面</option><option value="click">点击元素</option><option value="fill">填写内容</option><option value="select">选择选项</option><option value="wait_visible">等待元素可见</option><option value="assert_visible">断言元素可见</option><option value="assert_text">断言文本</option><option value="assert_count">断言数量</option><option value="assert_url">断言地址</option></select></label>
+            <label class="span-2"><span>步骤说明</span><input id="ui-step-description" placeholder="打开供应商列表页"></label>
+            <label data-ui-field="path" class="span-2"><span>站内路径或同站地址</span><input id="ui-step-path" placeholder="/login#/login，或粘贴同站完整地址"></label><label data-ui-field="wait_until"><span>页面等待条件</span><select id="ui-step-wait-until"><option value="domcontentloaded">DOM 已载入</option><option value="load">页面已载入</option><option value="networkidle">网络空闲</option></select></label>
+            <label data-ui-field="locator_type"><span>定位方式</span><select id="ui-locator-type"><option value="test_id">Test ID</option><option value="role">角色 Role</option><option value="label">表单标签 Label</option><option value="placeholder">占位文字</option><option value="text">页面文本</option><option value="css">CSS（高级）</option></select></label><label data-ui-field="locator_value"><span id="ui-locator-value-label">定位值</span><input id="ui-locator-value" placeholder="supplier-table"></label><label data-ui-field="role_name"><span>可访问名称（Role 可选）</span><input id="ui-locator-name" placeholder="查询"></label><label data-ui-field="exact" class="check-option"><input id="ui-locator-exact" type="checkbox"><span>精确匹配</span></label>
+            <label data-ui-field="value" class="span-2"><span>输入 / 选项值</span><input id="ui-step-value" placeholder="支持 ${VARIABLE} 凭据变量"></label><label data-ui-field="expected" class="span-2"><span>预期值</span><input id="ui-step-expected" placeholder="预期文本、数量或地址"></label><label data-ui-field="match"><span>匹配方式</span><select id="ui-step-match"><option value="contains">包含</option><option value="equals">完全相等</option><option value="not_contains">不包含</option><option value="not_equals">不等于</option></select></label>
+            <label><span>超时（秒）</span><input id="ui-step-timeout" type="number" min="1" max="60" placeholder="使用 UI 默认值"></label><label data-ui-field="record_actual" class="check-option"><input id="ui-step-record-actual" type="checkbox"><span>报告记录实际文本</span></label><label data-ui-field="sensitive" class="check-option"><input id="ui-step-sensitive" type="checkbox"><span>敏感输入（截图遮罩）</span></label><label data-ui-field="authentication" class="check-option"><input id="ui-step-authentication" type="checkbox"><span>登录结果断言</span></label>
+          </div>
+        </main>
+        <aside class="ui-test-panel"><div class="ui-test-panel-head"><div><h3>测试与证据</h3><small>测试运行不会写入正式巡检报告</small></div></div><div id="ui-test-result" class="ui-test-empty"><span>◎</span><b>等待测试</b><p>选择“测试到当前步骤”快速调试；测试未通过也可保存并启用。</p></div></aside>
+      </div>
+      <footer class="ui-editor-actions"><span id="ui-editor-save-hint">草稿不会参与自动巡检</span><div><button id="ui-scene-save-draft" class="button secondary" type="button">保存草稿</button><button id="ui-scene-test-through" class="button secondary" type="button">测试到当前步骤</button><button id="ui-scene-test-full" class="button secondary" type="button">完整测试</button><button id="ui-scene-save-enable" class="button primary" type="button">保存并启用</button></div></footer>
+    </section>
+  </div>
+
+  <div id="command-layer" class="command-layer hidden" aria-hidden="true"><button id="command-backdrop" class="command-backdrop" type="button" aria-label="关闭搜索"></button><section class="command-dialog" role="dialog" aria-modal="true" aria-label="全局搜索"><div class="command-input"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="command-input" type="search" placeholder="输入页面、检查项或报告名称…" autocomplete="off"><kbd>ESC</kbd></div><div id="command-results" class="command-results"></div></section></div>
+  <dialog id="image-preview-dialog" class="image-preview-dialog" aria-labelledby="image-preview-title" aria-describedby="image-preview-details">
+    <header class="image-preview-head">
+      <div class="image-preview-heading" aria-live="polite" aria-atomic="true">
+        <h2 id="image-preview-title">截图预览</h2>
+        <p id="image-preview-details"></p>
+      </div>
+      <span id="image-preview-position" class="image-preview-position" aria-label="截图序号">1 / 1</span>
+      <button id="image-preview-close" class="icon-button" type="button" aria-label="关闭截图预览" autofocus>×</button>
+    </header>
+    <div class="image-preview-body">
+      <button id="image-preview-prev" class="image-preview-arrow" type="button" aria-label="上一页截图" title="上一页">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+      </button>
+      <div class="image-preview-content">
+        <img id="image-preview-image" alt="">
+        <p id="image-preview-error" class="hidden" role="status">截图加载失败，请关闭后重试。</p>
+      </div>
+      <button id="image-preview-next" class="image-preview-arrow" type="button" aria-label="下一页截图" title="下一页">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+      </button>
+    </div>
+  </dialog>
+  <dialog id="message-dialog" class="message-dialog" aria-labelledby="message-title" aria-describedby="message-text">
+    <form method="dialog">
+      <div class="message-dialog-head">
+        <span id="message-icon" class="message-icon" aria-hidden="true"></span>
+        <h2 id="message-title">提示</h2>
+        <button id="message-close" class="icon-button message-close" type="submit" value="cancel" aria-label="关闭弹窗">×</button>
+      </div>
+      <div class="message-dialog-body">
+        <p id="message-text"></p>
+        <dl id="message-meta" class="message-meta hidden"></dl>
+        <pre id="message-details" class="message-details hidden"></pre>
+      </div>
+      <div class="form-actions message-actions">
+        <button id="message-cancel" class="button secondary hidden" type="submit" value="cancel">取消</button>
+        <button id="message-confirm" class="button primary" type="submit" value="confirm">知道了</button>
+      </div>
+    </form>
+  </dialog>
+  <script src="./app.js?v=20261014-health-radar-1"></script>
+</body>
+</html>

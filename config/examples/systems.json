@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "default_system_id": "demo-srm",
+  "max_parallel_runs": 2,
+  "systems": [
+    {
+      "system_id": "demo-srm",
+      "display_name": "SRM 示例",
+      "config": "systems/demo-srm.json"
+    },
+    {
+      "system_id": "demo-erp",
+      "display_name": "ERP 示例",
+      "config": "systems/demo-erp.json"
+    },
+    {
+      "system_id": "demo-portal",
+      "display_name": "门户示例",
+      "config": "systems/demo-portal.json"
+    }
+  ]
+}

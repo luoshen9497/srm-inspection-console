@@ -1,0 +1,35 @@
+{
+  "system_id": "demo-portal",
+  "display_name": "门户示例",
+  "adapter": "http-scenario-v1",
+  "environment": "example",
+  "base_url": "https://example.test",
+  "default_timeout_seconds": 10,
+  "report_limit": 30,
+  "schedule": {
+    "enabled": false,
+    "timezone": "Asia/Shanghai",
+    "mode": "interval",
+    "interval_minutes": 30
+  },
+  "alerts": {
+    "enabled": false
+  },
+  "checks": [
+    {
+      "id": "health-check",
+      "name": "健康检查示例",
+      "method": "GET",
+      "path": "/api/health",
+      "enabled": false,
+      "expected_status": 200,
+      "assertions": [
+        {
+          "path": "$.success",
+          "op": "equals",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

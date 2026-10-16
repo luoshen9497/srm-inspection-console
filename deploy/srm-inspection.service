@@ -1,0 +1,21 @@
+[Unit]
+Description=SRM multi-system inspection console
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+Environment=INSPECTION_IMAGE=srm-inspection:ui
+EnvironmentFile=-/etc/srm-inspection/runtime.env
+EnvironmentFile=-/etc/srm-inspection/deployment.env
+ExecStartPre=-/usr/bin/docker rm -f srm-inspection
+ExecStart=/usr/bin/docker run --name srm-inspection --user 10001:10001 --read-only --security-opt no-new-privileges --shm-size=1g --tmpfs /tmp:rw,noexec,nosuid,size=256m -e INSPECTION_PUBLIC_URL -e INSPECTION_COOKIE_SECURE -p 127.0.0.1:18091:8091 -v /etc/srm-inspection:/config:rw -v /var/lib/srm-inspection:/data:rw ${INSPECTION_IMAGE} --registry /config/systems.json --system-data /data --auth-db /data/auth.db --auth-config /data/admin.json --host 0.0.0.0 --port 8091
+ExecStop=/usr/bin/docker stop -t 20 srm-inspection
+ExecStopPost=-/usr/bin/docker rm -f srm-inspection
+
+[Install]
+WantedBy=multi-user.target

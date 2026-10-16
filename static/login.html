@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>登录 · SRM 多系统巡检中心</title>
+  <link rel="stylesheet" href="/login.css?v=20261014-brand-blue-1">
+</head>
+<body>
+  <main class="login-shell">
+    <section class="brand-stage" aria-labelledby="product-title">
+      <div class="aurora aurora-one" aria-hidden="true"></div>
+      <div class="aurora aurora-two" aria-hidden="true"></div>
+      <div class="brand-content">
+        <div class="brand-rule" aria-hidden="true"></div>
+        <h1 id="product-title"><span>SRM</span> 多系统巡检中心</h1>
+        <h2>让每一次巡检，都清晰可见</h2>
+        <p class="brand-lead">统一监控 API 与 UI 场景，及时发现风险并保留运行证据。</p>
+        <div class="capabilities" aria-label="产品能力">
+          <article>
+            <span class="capability-icon signal" aria-hidden="true"><i></i></span>
+            <div><b>多系统统一监控</b><small>API · UI · 任务</small></div>
+          </article>
+          <article>
+            <span class="capability-icon shield" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.8 2.8 8 7 10 4.2-2 7-5.2 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-5"/></svg>
+            </span>
+            <div><b>风险及时发现</b><small>异常告警 · 快速响应</small></div>
+          </article>
+          <article>
+            <span class="capability-icon evidence" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h5M9 12h6M9 16h5"/></svg>
+            </span>
+            <div><b>运行证据留存</b><small>可追溯 · 可审计</small></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="topology" aria-hidden="true">
+        <svg class="topology-lines" viewBox="0 0 820 500" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="line-gradient" x1="0" x2="1"><stop stop-color="#22b8cf"/><stop offset=".48" stop-color="#3b82f6"/><stop offset="1" stop-color="var(--primary)"/></linearGradient>
+          </defs>
+          <path d="M118 212 302 272 408 195 528 262 690 192"/>
+          <path d="M302 272 208 382M302 272l168 130M528 262l120 126M408 195l-34 190"/>
+          <path class="soft" d="M80 320 208 382 374 385 470 402 648 388 748 326"/>
+          <g class="nodes"><circle cx="118" cy="212" r="5"/><circle cx="302" cy="272" r="5"/><circle cx="408" cy="195" r="6"/><circle cx="528" cy="262" r="5"/><circle cx="690" cy="192" r="5"/><circle cx="208" cy="382" r="5"/><circle cx="470" cy="402" r="5"/><circle cx="648" cy="388" r="5"/></g>
+        </svg>
+
+        <div class="system-node node-erp"><i></i><b>ERP</b><small>运行正常</small></div>
+        <div class="system-node node-crm"><i></i><b>CRM</b><small>运行正常</small></div>
+        <div class="system-node node-mes"><i></i><b>MES</b><small>运行正常</small></div>
+        <div class="system-node node-wms"><i></i><b>WMS</b><small>运行正常</small></div>
+        <div class="system-node node-oa"><i></i><b>OA</b><small>运行正常</small></div>
+        <div class="core-node">
+          <span class="core-top">SRM</span><span></span><span></span>
+          <small>统一巡检中枢</small>
+        </div>
+        <div class="evidence-panel"><small>全链路状态可视</small><div><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="status-panel"><small>实时巡检</small><b>99.98%</b><span>运行稳定</span></div>
+      </div>
+      <p class="stage-foot">SRM&nbsp;&nbsp;·&nbsp;&nbsp;OPERATION VISIBLE&nbsp;&nbsp;·&nbsp;&nbsp;BUSINESS MORE RELIABLE</p>
+    </section>
+
+    <section class="login-stage" aria-label="管理员登录">
+      <div class="login-card">
+        <div class="login-card-head">
+          <div>
+            <span class="eyebrow">ADMIN CONSOLE</span>
+            <h2>登录控制台</h2>
+            <p>使用管理员账户继续</p>
+          </div>
+          <div class="service-state"><span></span><div><b>巡检服务运行正常</b><small>自动化巡检</small></div></div>
+        </div>
+
+        <form id="login-form" autocomplete="on" novalidate>
+          <label for="username">用户名</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>
+            <input id="username" name="username" type="text" autocomplete="username" maxlength="128" placeholder="请输入用户名" required autofocus>
+          </div>
+
+          <div class="password-label"><label for="password">密码</label><span id="caps-lock" role="status" aria-live="polite"></span></div>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>
+            <input id="password" name="password" type="password" autocomplete="current-password" maxlength="4096" placeholder="请输入密码" required>
+            <button id="password-toggle" class="password-toggle" type="button" aria-label="显示密码" aria-pressed="false">
+              <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+              <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.2A11 11 0 0 1 12 6c6.5 0 10 6 10 6a18 18 0 0 1-2.2 2.9M6.3 6.3C3.5 8.1 2 12 2 12s3.5 6 10 6c1.2 0 2.3-.2 3.3-.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+            </button>
+          </div>
+
+          <div id="login-error" class="login-error" role="alert" aria-live="assertive"></div>
+          <button id="login-submit" class="login-submit" type="submit"><span>登录</span><i aria-hidden="true"></i></button>
+        </form>
+
+        <div class="session-note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.8 2.8 8 7 10 4.2-2 7-5.2 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-5"/></svg>
+          <span>安全会话 · 30 分钟后自动失效</span>
+        </div>
+        <div class="trust-line"><span></span><small>专注系统稳定运行 · 守护企业核心业务</small><span></span></div>
+      </div>
+      <p class="login-foot">INSPECT&nbsp;&nbsp;·&nbsp;&nbsp;MONITOR&nbsp;&nbsp;·&nbsp;&nbsp;SECURE&nbsp;&nbsp;·&nbsp;&nbsp;ALWAYS ON</p>
+    </section>
+  </main>
+  <script src="/login.js?v=20261013-autofill" defer></script>
+</body>
+</html>

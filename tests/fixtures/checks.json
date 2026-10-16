@@ -1,0 +1,106 @@
+{
+  "system_id": "overseas-srm",
+  "display_name": "Test SRM",
+  "environment": "test",
+  "base_url": "https://example.test",
+  "checks": [
+    {
+      "id": "gsrm-login",
+      "name": "GSRM 登录",
+      "method": "POST",
+      "path": "/login",
+      "enabled": true,
+      "login_precheck": true,
+      "body": {
+        "username": "${SRM_USERNAME}",
+        "password": "${SRM_PASSWORD}"
+      },
+      "assertions": [],
+      "extract": [
+        {
+          "variable": "ticket",
+          "path": "$.ticket"
+        }
+      ]
+    },
+    {
+      "id": "advance-payment-detail",
+      "name": "advance-payment-detail",
+      "method": "POST",
+      "path": "/example/advance-payment-detail",
+      "enabled": true,
+      "body": {
+        "entity": {
+          "advancePayReqInfo": 101
+        },
+        "isTotalSum": false,
+        "paging": false,
+        "pageNo": 1,
+        "pageSize": 20
+      },
+      "assertions": [
+        {
+          "path": "$.code",
+          "op": "equals",
+          "value": 100000000
+        },
+        {
+          "path": "$.message",
+          "op": "equals",
+          "value": "操作成功"
+        }
+      ]
+    },
+    {
+      "id": "payment-detail",
+      "name": "payment-detail",
+      "method": "POST",
+      "path": "/example/payment-detail",
+      "enabled": true,
+      "body": {
+        "entity": {
+          "payRequestInfo": 202
+        },
+        "isTotalSum": false,
+        "paging": false,
+        "pageNo": 1,
+        "pageSize": 20
+      },
+      "assertions": [
+        {
+          "path": "$.code",
+          "op": "equals",
+          "value": 100000000
+        },
+        {
+          "path": "$.message",
+          "op": "equals",
+          "value": "操作成功"
+        }
+      ]
+    },
+    {
+      "id": "reconciliation-invoice-detail",
+      "name": "对账示例",
+      "method": "POST",
+      "path": "/example/invoice",
+      "enabled": true,
+      "body_encoding": "form",
+      "body": {
+        "reconCode": "TEST-RECON-001"
+      },
+      "assertions": [
+        {
+          "path": "$.code",
+          "op": "equals",
+          "value": 100000000
+        },
+        {
+          "path": "$.message",
+          "op": "equals",
+          "value": "操作成功"
+        }
+      ]
+    }
+  ]
+}

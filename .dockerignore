@@ -1,0 +1,13 @@
+*
+!app.py
+!api_auth.py
+!operations.py
+!artifact_store.py
+!browser_executor.py
+!migrate_config_v2.py
+!migrate_api_auth_flows.py
+!requirements.txt
+!static/
+!static/**
+!deploy/
+!deploy/Dockerfile
